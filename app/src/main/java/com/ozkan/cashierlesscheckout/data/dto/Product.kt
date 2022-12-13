@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Product(
     @SerializedName("Date")
-    var Date: String? = null,
+    var Date: String? = "",
     @SerializedName("TotalPrice")
-    var TotalPrice: Int? = null,
+    var TotalPrice: Int? = 0,
     @SerializedName("ProductNames")
     var ProductNames: List<String> = listOf(),
     @SerializedName("ProducerNames")
@@ -18,4 +18,4 @@ data class Product(
     var ProductTotalPrice: List<Int> = listOf(),
     @SerializedName("ProductTax")
     var ProductTax: List<Int> = listOf()
-):Parcelable
+) : Parcelable
