@@ -61,16 +61,19 @@ fun QRPage(
     ) {
         if (hasCamPermission) {
             if (hasReadCode) {
-                val product = Gson().fromJson(code,Product::class.java)
 
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    key = "productItem",
-                    value = product
-                )
-                navController.navigate(Screen.Home.route)
+                LaunchedEffect(key1 =true){
+                    val product = Gson().fromJson(code,Product::class.java)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = "productItem",
+                        value = product
+                    )
+                     navController.navigate(Screen.Home.route)
+                }
             } else {
                 AndroidView(
                     factory = { context ->
+
                         val previewView = PreviewView(context)
                         val preview = Preview.Builder().build()
                         val selector = CameraSelector.Builder()

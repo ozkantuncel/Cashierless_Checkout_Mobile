@@ -83,12 +83,16 @@ fun HomeScreen(
         is UiState.Empty -> {}
     }
 
+
+
     HomePage(
         navController = navController,
         product = product,
         activity = activity,
         homePageViewModel = homePageViewModel
     )
+
+
 
 }
 
@@ -99,6 +103,8 @@ fun HomePage(
     activity: Activity,
     homePageViewModel: HomePageViewModel
 ) {
+
+
     val balance = remember {
         mutableStateOf(100)
     }
@@ -110,6 +116,9 @@ fun HomePage(
     val balanceAddText = remember {
         mutableStateOf("")
     }
+
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -122,8 +131,7 @@ fun HomePage(
                         icon = R.drawable.qr_icon,
                         iconTint = Color.Black
                     ) {
-                        // navController.popBackStack()//Bug
-                        navController.navigate(Screen.QRScanner.route)
+                         navController.navigate(Screen.QRScanner.route)
                     }
                 }
             )
@@ -220,8 +228,8 @@ fun HomePage(
                         if (balance.value >= total.value) {
 
                             val order = Order(
-                                date = dateP.value,
-                                isChecked = true
+                                Date = dateP.value,
+                                IsChecked = true
                             )
                             homePageViewModel.addOrder(order = order)
                         } else {

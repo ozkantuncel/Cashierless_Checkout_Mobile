@@ -17,7 +17,7 @@ class OrderRepositoryImpl(
     ) {
 
         val doc =
-            database.collection(Constants.FirebaseFireStoreConstants.ORDER).document(order.date!!)
+            database.collection(Constants.FirebaseFireStoreConstants.ORDER).document(order.Date!!)
         doc.set(order)
             .addOnSuccessListener {
                 result.invoke(
