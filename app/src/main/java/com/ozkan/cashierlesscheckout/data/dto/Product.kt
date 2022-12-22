@@ -10,6 +10,8 @@ data class Product(
     var Date: String? = "",
     @SerializedName("TotalPrice")
     var TotalPrice: Int? = 0,
+    @SerializedName("ProductId")
+    var ProductId:List<Int> = listOf(),
     @SerializedName("ProductNames")
     var ProductNames: List<String> = listOf(),
     @SerializedName("ProducerNames")
