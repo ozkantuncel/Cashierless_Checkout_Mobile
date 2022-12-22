@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -30,11 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,6 +45,7 @@ import com.ozkan.cashierlesscheckout.R
 import com.ozkan.cashierlesscheckout.data.dto.Product
 import com.ozkan.cashierlesscheckout.firebase.dto.Order
 import com.ozkan.cashierlesscheckout.ui.navigation.Screen
+import com.ozkan.cashierlesscheckout.ui.screens.main_screens.common.ApiLoadingState
 import com.ozkan.cashierlesscheckout.ui.screens.main_screens.common.BKAIconButton
 import com.ozkan.cashierlesscheckout.ui.screens.main_screens.common.BTKDialogWithTextFiledAndButton
 import com.ozkan.cashierlesscheckout.ui.screens.main_screens.common.BTKLoginButton
@@ -60,6 +63,7 @@ fun HomeScreen(
     product: Product? = null,
     homePageViewModel: HomePageViewModel = hiltViewModel()
 ) {
+
     val homePageState = homePageViewModel.orderState.value
     val errorDialogState = remember { mutableStateOf(false) }
     val errorTitle = remember { mutableStateOf("") }
@@ -67,7 +71,7 @@ fun HomeScreen(
 
     when (homePageState) {
         is UiState.Loading -> {
-
+            ApiLoadingState()
         }
         is UiState.Failure -> {
 
@@ -93,7 +97,6 @@ fun HomeScreen(
     )
 
 
-
 }
 
 @Composable
@@ -110,6 +113,10 @@ fun HomePage(
     }
 
     val balanceAdd = remember {
+        mutableStateOf(false)
+    }
+
+    val paymentApp = remember {
         mutableStateOf(false)
     }
 
@@ -131,7 +138,7 @@ fun HomePage(
                         icon = R.drawable.qr_icon,
                         iconTint = Color.Black
                     ) {
-                         navController.navigate(Screen.QRScanner.route)
+                        navController.navigate(Screen.QRScanner.route)
                     }
                 }
             )
@@ -232,10 +239,49 @@ fun HomePage(
                                 IsChecked = true
                             )
                             homePageViewModel.addOrder(order = order)
+                            balance.value -= total.value
+                            paymentApp.value = true
+
                         } else {
                             activity.toast("Bakiye yetersiz!!", length = Toast.LENGTH_LONG)
                         }
                     }
+                }
+
+                if (paymentApp.value) {
+                    BTKDialogWithTextFiledAndButton(
+                        openTheDialog = paymentApp,
+                        content = {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            )
+                            {
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.payscs_icon),
+                                    contentDescription = null,
+                                    tint = Color.Green
+                                )
+                                Spacer(modifier = Modifier.size(10.dp))
+                                Text(
+                                    text = "Ödeme başaralı",
+                                    color = Color.Black,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.W300
+                                )
+                                Text(
+                                    text = "Kalan bakiye ${balance.value}",
+                                    color = Color.Black,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.W300
+                                )
+
+                            }
+                        },
+                        backgroundColor = Color.White
+                    )
                 }
 
                 if (balanceAdd.value) {
@@ -244,7 +290,7 @@ fun HomePage(
                         content = {
                             Column(
                                 modifier = Modifier
-                                    .padding(horizontal = 20.dp, vertical = 10.dp)
+                                    .padding(horizontal = 20.dp, vertical = 20.dp)
                                     .background(
                                         color = Color.White,
                                         shape = RoundedCornerShape(15.dp)
@@ -295,7 +341,7 @@ fun HomePage(
                                         balanceAdd.value = false
                                         if (balanceAddText.value.isNotEmpty()) {
                                             balance.value += balanceAddText.value.toInt()
-                                            activity.toast("Başarılı bir şekilde eklendi")
+                                            activity.toast("Bakiye Eklendi")
                                         } else {
                                             activity.toast("Lütfen bir değer giriniz")
                                         }
@@ -304,9 +350,7 @@ fun HomePage(
                                         text = "Ekle",
                                         style = TextStyle(textAlign = TextAlign.Center)
                                     )
-
                                 }
-
                             }
                         },
                         title = "Bakiye Ekleme"
@@ -315,11 +359,8 @@ fun HomePage(
             }
         },
 
+
         )
 }
 
-@Preview
-@Composable
-fun MyComponent() {
 
-}
