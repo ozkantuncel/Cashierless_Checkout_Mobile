@@ -65,8 +65,6 @@ fun HomeScreen(
 ) {
 
     val homePageState = homePageViewModel.orderState.value
-    val errorDialogState = remember { mutableStateOf(false) }
-    val errorTitle = remember { mutableStateOf("") }
     val activity = LocalContext.current as Activity
 
     when (homePageState) {
@@ -123,9 +121,6 @@ fun HomePage(
     val balanceAddText = remember {
         mutableStateOf("")
     }
-
-
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -188,9 +183,6 @@ fun HomePage(
                 val dateP = remember {
                     mutableStateOf("")
                 }
-
-
-
                 if (product != null) {
                     LaunchedEffect(key1 = true) {
                         total.value = product.TotalPrice!!
@@ -253,7 +245,7 @@ fun HomePage(
                         openTheDialog = paymentApp,
                         content = {
                             Column(
-                                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             )
@@ -342,6 +334,7 @@ fun HomePage(
                                         if (balanceAddText.value.isNotEmpty()) {
                                             balance.value += balanceAddText.value.toInt()
                                             activity.toast("Bakiye Eklendi")
+                                            balanceAddText.value = ""
                                         } else {
                                             activity.toast("Lütfen bir değer giriniz")
                                         }
